@@ -1,0 +1,54 @@
+{
+  "name": "tensajs",
+  "version": "1.0.0",
+  "description": "A lightweight animation library for the DOM - timelines, tweens, text effects, and physics-based motion, with zero dependencies.",
+  "type": "module",
+  "main": "./dist/tensajs.cjs.js",
+  "module": "./dist/tensajs.esm.js",
+  "browser": "./dist/tensajs.min.js",
+  "types": "./dist/tensajs.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/tensajs.esm.js",
+      "require": "./dist/tensajs.cjs.js"
+    },
+    "./plugins/*": {
+      "import": "./dist/plugins/*.esm.js",
+      "require": "./dist/plugins/*.cjs.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "npm run types:build && vite build && npm run build:cdn",
+    "build:cdn": "node scripts/build-cdn.js",
+    "types:build": "tsc && node scripts/clean-types.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "animation",
+    "css",
+    "json",
+    "tween",
+    "timeline",
+    "scroll",
+    "web-animation"
+  ],
+  "author": "AbdisamadMoh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AbdisamadMoh/TensaJS.git"
+  },
+  "homepage": "https://github.com/AbdisamadMoh/TensaJS",
+  "bugs": {
+    "url": "https://github.com/AbdisamadMoh/TensaJS/issues"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^5.4.21"
+  }
+}
