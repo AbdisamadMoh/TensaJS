@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/tensajs.cjs.js",
   "module": "./dist/tensajs.esm.js",
-  "browser": "./dist/tensajs.min.js",
+  "browser": "./dist/cdn/tensajs.js",
   "types": "./dist/tensajs.d.ts",
   "exports": {
     ".": {
