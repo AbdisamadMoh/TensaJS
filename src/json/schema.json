@@ -1,0 +1,704 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tensajs.dev/schema/v1.0/animation.json",
+  "title": "Tensa Animation Schema",
+  "description": "Schema for Tensa JSON-driven animation documents",
+  "type": "object",
+  "anyOf": [
+    {
+      "description": "A full Tensa document",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0"
+          ],
+          "default": "1.0",
+          "description": "Schema version"
+        },
+        "id": {
+          "type": "string",
+          "description": "Optional identifier for this animation document"
+        },
+        "customEasings": {
+          "type": "array",
+          "description": "Named easing functions defined inline — available anywhere 'ease' is accepted",
+          "items": {
+            "$ref": "#/definitions/CustomEasing"
+          }
+        },
+        "variables": {
+          "type": "object",
+          "description": "Named reusable values. Reference them anywhere as \"$varName\"",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        "callbacks": {
+          "type": "object",
+          "description": "Named callback sequences defined as arrays of actions — no external JS required",
+          "additionalProperties": {
+            "$ref": "#/definitions/ActionSequence"
+          }
+        },
+        "defaults": {
+          "$ref": "#/definitions/Defaults",
+          "description": "Fallback values applied to every tween in this document, scoped to this document only"
+        },
+        "setup": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Action"
+            },
+            {
+              "$ref": "#/definitions/ActionSequence"
+            }
+          ],
+          "description": "Document-level action(s) run synchronously before the timeline/tweens are built (e.g. plugin setup). Can be used alone for setup-only documents with no animation."
+        },
+        "timeline": {
+          "$ref": "#/definitions/Timeline",
+          "description": "The main timeline definition for the document"
+        },
+        "tweens": {
+          "type": "array",
+          "description": "Shorthand: a flat list of tweens run concurrently from t=0",
+          "items": {
+            "$ref": "#/definitions/Tween"
+          }
+        },
+        "_note": {
+          "type": "string",
+          "description": "Optional developer note or comment"
+        },
+        "$schema": {
+          "type": "string",
+          "description": "JSON schema reference URL"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "description": "A single Tween (shorthand)",
+      "$ref": "#/definitions/Tween"
+    }
+  ],
+  "required": [],
+  "definitions": {
+    "CustomEasing": {
+      "type": "object",
+      "description": "A named easing defined inline via cubicBezier, steps, or alias",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name to use in ease fields"
+        },
+        "cubicBezier": {
+          "type": "array",
+          "description": "Four control point values [x1, y1, x2, y2]",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "steps": {
+          "type": "array",
+          "description": "[count] or [count, \"start\" | \"end\"]",
+          "items": {},
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "from": {
+          "type": "string",
+          "description": "Alias - reference any other ease string e.g. back.out(2.5)"
+        }
+      }
+    },
+    "Action": {
+      "type": "object",
+      "description": "A single declarative action inside a callback sequence",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "The name of the action to execute (built-in or plugin-provided)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type parameter for plugins like splitText"
+        },
+        "target": {
+          "type": "string",
+          "description": "CSS selector for DOM actions / Tensa tween actions"
+        },
+        "class": {
+          "type": "string",
+          "description": "CSS class name to add/remove/toggle"
+        },
+        "attr": {
+          "type": "string",
+          "description": "HTML attribute name to modify"
+        },
+        "value": {
+          "description": "Attribute value, style value, or text content"
+        },
+        "style": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "CSS style object to apply"
+        },
+        "text": {
+          "type": "string",
+          "description": "Text content to set"
+        },
+        "props": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Animation properties for animate/animateFrom/apply"
+        },
+        "duration": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Animation duration in seconds"
+        },
+        "delay": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Delay before action executes in seconds"
+        },
+        "ease": {
+          "$ref": "#/definitions/Ease",
+          "description": "Easing function name for this action"
+        },
+        "id": {
+          "type": "string",
+          "description": "Timeline id for play/pause/seek/restart"
+        },
+        "from": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string" }
+          ],
+          "description": "Optional start time (seconds) or label name for the play action"
+        },
+        "atTime": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string" }
+          ],
+          "description": "Optional time (seconds) or label name to seek to before pausing"
+        },
+        "time": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string" }
+          ],
+          "description": "Seek time in seconds, or a label name"
+        },
+        "event": {
+          "type": "string",
+          "description": "Custom event name for dispatch"
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Custom event payload"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to navigate to"
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Delay duration for wait action"
+        }
+      }
+    },
+    "ActionSequence": {
+      "type": "array",
+      "description": "An ordered list of actions executed when the callback fires",
+      "items": {
+        "$ref": "#/definitions/Action"
+      }
+    },
+    "Defaults": {
+      "type": "object",
+      "description": "Fallback values applied to every tween in this document, scoped to this document only",
+      "properties": {
+        "duration": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0.5,
+          "description": "Default duration in seconds for tweens in this document"
+        },
+        "ease": {
+          "$ref": "#/definitions/Ease",
+          "description": "Default easing function name for tweens in this document"
+        },
+        "repeat": {
+          "type": "integer",
+          "minimum": -1,
+          "default": 0,
+          "description": "Default repeat count for tweens in this document (-1 for infinite)"
+        },
+        "yoyo": {
+          "type": "boolean",
+          "default": false,
+          "description": "Default yoyo behavior for tweens in this document"
+        },
+        "overwrite": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "auto"
+              ]
+            }
+          ],
+          "description": "Default overwrite behavior for tweens in this document"
+        },
+        "willChange": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Default will-change setting for tweens in this document"
+        }
+      }
+    },
+    "Timeline": {
+      "type": "object",
+      "description": "A timeline that sequences tweens",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this timeline"
+        },
+        "paused": {
+          "type": "boolean",
+          "default": false,
+          "description": "Start the timeline in a paused state"
+        },
+        "repeat": {
+          "type": "integer",
+          "minimum": -1,
+          "default": 0,
+          "description": "Number of times to repeat (-1 for infinite)"
+        },
+        "repeatDelay": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0,
+          "description": "Wait time before each repeat in seconds"
+        },
+        "yoyo": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, playback alternates direction each repeat"
+        },
+        "delay": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0,
+          "description": "Delay before timeline starts in seconds"
+        },
+        "ease": {
+          "$ref": "#/definitions/Ease",
+          "description": "Default easing for the timeline"
+        },
+        "timeScale": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 1,
+          "description": "Playback speed multiplier"
+        },
+        "onStart": {
+          "type": "string",
+          "description": "Name of a callback (registered or inline) to fire on start"
+        },
+        "onUpdate": {
+          "type": "string",
+          "description": "Name of a callback to fire on every frame update"
+        },
+        "onComplete": {
+          "type": "string",
+          "description": "Name of a callback to fire when timeline completes"
+        },
+        "onRepeat": {
+          "type": "string",
+          "description": "Name of a callback to fire when timeline repeats"
+        },
+        "onReverseComplete": {
+          "type": "string",
+          "description": "Name of a callback to fire when timeline completes in reverse"
+        },
+        "tweens": {
+          "type": "array",
+          "description": "Array of tweens to sequence in this timeline",
+          "items": {
+            "$ref": "#/definitions/Tween"
+          }
+        },
+        "labels": {
+          "type": "object",
+          "description": "Named time positions within the timeline",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "timelines": {
+          "type": "array",
+          "description": "Nested timelines",
+          "items": {
+            "type": "object",
+            "properties": {
+              "position": {
+                "$ref": "#/definitions/Position"
+              },
+              "timeline": {
+                "$ref": "#/definitions/Timeline",
+                "description": "The nested timeline object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tween": {
+      "type": "object",
+      "description": "A single animation unit",
+      "required": [
+        "target"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this tween"
+        },
+        "type": {
+          "type": "string",
+          "default": "animate",
+          "description": "Tween type (animate, animateFrom, sequence, apply, or a plugin-provided type)"
+        },
+        "setup": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Action"
+            },
+            {
+              "$ref": "#/definitions/ActionSequence"
+            }
+          ],
+          "description": "Optional action(s) to run synchronously before the tween initializes (e.g. text splitting)"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "CSS selector"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "Element(s) or object(s) to animate"
+        },
+        "position": {
+          "$ref": "#/definitions/Position",
+          "description": "Timeline position (number, label, or expression like '<+=0.5')"
+        },
+        "duration": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Animation duration in seconds"
+        },
+        "delay": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0,
+          "description": "Delay before tween starts in seconds"
+        },
+        "ease": {
+          "$ref": "#/definitions/Ease",
+          "description": "Easing function name (e.g. 'elastic.out')"
+        },
+        "repeat": {
+          "type": "integer",
+          "minimum": -1,
+          "default": 0,
+          "description": "Number of times to repeat (-1 for infinite)"
+        },
+        "repeatDelay": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0,
+          "description": "Wait time before each repeat in seconds"
+        },
+        "yoyo": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, playback alternates direction each repeat"
+        },
+        "paused": {
+          "type": "boolean",
+          "default": false,
+          "description": "Start the tween in a paused state"
+        },
+        "overwrite": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "auto"
+              ]
+            }
+          ],
+          "description": "Whether to automatically kill conflicting tweens"
+        },
+        "willChange": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "GPU layer compositing hint: true to auto-infer, or explicit property string"
+        },
+        "stagger": {
+          "$ref": "#/definitions/Stagger",
+          "description": "Stagger configuration for multiple targets"
+        },
+        "keyframes": {
+          "type": "array",
+          "description": "Array of keyframe objects for multi-step animation",
+          "items": {
+            "$ref": "#/definitions/Keyframe"
+          }
+        },
+        "props": {
+          "type": "object",
+          "description": "Properties to animate TO",
+          "additionalProperties": true
+        },
+        "fromProps": {
+          "type": "object",
+          "description": "Starting properties (for sequence type)",
+          "additionalProperties": true
+        },
+        "onStart": {
+          "type": "string",
+          "description": "Name of a callback to fire when tween starts"
+        },
+        "onUpdate": {
+          "type": "string",
+          "description": "Name of a callback to fire on every frame update"
+        },
+        "onComplete": {
+          "type": "string",
+          "description": "Name of a callback to fire when tween completes"
+        },
+        "onRepeat": {
+          "type": "string",
+          "description": "Name of a callback to fire when tween repeats"
+        },
+        "onReverseComplete": {
+          "type": "string",
+          "description": "Name of a callback to fire when tween completes in reverse"
+        },
+        "_note": {
+          "type": "string",
+          "description": "Optional developer note or comment"
+        }
+      }
+    },
+    "Keyframe": {
+      "type": "object",
+      "description": "A keyframe within a tween (percentage-based)",
+      "required": [
+        "at"
+      ],
+      "properties": {
+        "at": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Progress 0-1"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\d+%$",
+              "description": "Percentage string like '50%'"
+            }
+          ]
+        },
+        "ease": {
+          "$ref": "#/definitions/Ease",
+          "description": "Easing function name for this keyframe"
+        },
+        "props": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Properties to animate to at this keyframe"
+        }
+      }
+    },
+    "Stagger": {
+      "oneOf": [
+        {
+          "type": "number",
+          "description": "Simple each-delay in seconds"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Total stagger time"
+            },
+            "each": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Per-element delay"
+            },
+            "from": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "edges",
+                    "random"
+                  ]
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              ]
+            },
+            "grid": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "[cols, rows] for 2D grid stagger"
+            },
+            "axis": {
+              "type": "string",
+              "enum": [
+                "x",
+                "y"
+              ]
+            },
+            "ease": {
+              "$ref": "#/definitions/Ease",
+              "description": "Easing applied to the stagger delay distribution"
+            }
+          }
+        }
+      ]
+    },
+    "Position": {
+      "description": "Position in the timeline (number, label, or relative expression)",
+      "oneOf": [
+        {
+          "type": "number",
+          "description": "Absolute time in seconds"
+        },
+        {
+          "type": "string",
+          "description": "Label name, '<', '>', or relative like '<+=0.5'"
+        }
+      ]
+    },
+    "Ease": {
+      "type": "string",
+      "description": "Easing function name (built-in, custom-defined, or parameterized)",
+      "examples": [
+        "none",
+        "linear",
+        "quad.in",
+        "quad.out",
+        "quad.inOut",
+        "cubic.in",
+        "cubic.out",
+        "cubic.inOut",
+        "quart.in",
+        "quart.out",
+        "quart.inOut",
+        "quint.in",
+        "quint.out",
+        "quint.inOut",
+        "sine.in",
+        "sine.out",
+        "sine.inOut",
+        "expo.in",
+        "expo.out",
+        "expo.inOut",
+        "circ.in",
+        "circ.out",
+        "circ.inOut",
+        "back.in",
+        "back.out",
+        "back.inOut",
+        "elastic.in",
+        "elastic.out",
+        "elastic.inOut",
+        "bounce.in",
+        "bounce.out",
+        "bounce.inOut",
+        "steps(6)",
+        "steps(4,start)",
+        "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
+        "myCustomEase"
+      ]
+    }
+  }
+}
