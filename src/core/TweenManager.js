@@ -1,12 +1,3 @@
-/**
- * Tensa TweenManager - Global registry of all active tweens
- * 
- * Manages:
- * - stop(target, props?) - precise property-level kill
- * - getAnimations(target) - introspection
- * - Global defaults
- * - Overwrite management ('auto' mode)
- */
 
 class TweenManager {
   constructor() {
@@ -97,7 +88,7 @@ class TweenManager {
    * Kill all tweens animating a specific target.
    * Optionally, only kill specific properties.
    * @param {*} target
-   * @param {string|Object} [props] - specific property or map of props
+   * @param {string|string[]} [props] - specific property or array of property names
    */
   stop(target, props) {
     const targets = Array.isArray(target) ? target : [target];
@@ -118,7 +109,7 @@ class TweenManager {
           }
         } else {
           // Kill specific properties
-          const propList = typeof props === 'string' ? [props] : Object.keys(props);
+          const propList = typeof props === 'string' ? [props] : props;
           const idx = tween._targets?.indexOf(t);
           if (idx !== undefined && idx >= 0 && tween._descriptors[idx]) {
             for (const prop of propList) {

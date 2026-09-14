@@ -4,7 +4,7 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/tensajs)](https://bundlephobia.com/package/tensajs)
 [![license](https://img.shields.io/npm/l/tensajs.svg)](LICENSE)
 
-A JavaScript animation engine with a real physics layer built in - tweens, timelines, text effects, and zero dependencies.
+A JavaScript animation engine with a real physics layer built in, tweens, timelines, text effects, and zero dependencies.
 
 [Website](https://tensajs.com) · [Docs](https://docs.tensajs.com) · [Playground](https://docs.tensajs.com/playground)
 
@@ -31,7 +31,7 @@ Or drop it in with a script tag:
 
 ## Why Tensa
 
-Tensa includes a physics layer - gravity, springs, collisions, soft bodies - built into the same timeline and tween system as everything else.
+Tensa includes a physics layer,  gravity, springs, collisions, soft bodies - built into the same timeline and tween system as everything else.
 
 **Core**
 - Tweens, timelines, and JSON-driven playback
