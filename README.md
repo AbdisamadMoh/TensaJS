@@ -4,7 +4,7 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/tensajs)](https://bundlephobia.com/package/tensajs)
 [![license](https://img.shields.io/npm/l/tensajs.svg)](LICENSE)
 
-Timelines, tweens, text effects, and real physics for the DOM, with zero dependencies.
+A JavaScript animation engine with a real physics layer built in - tweens, timelines, text effects, and zero dependencies.
 
 [Website](https://tensajs.com) · [Docs](https://docs.tensajs.com) · [Playground](https://docs.tensajs.com/playground)
 
@@ -31,24 +31,23 @@ Or drop it in with a script tag:
 
 ## Why Tensa
 
-Most animation libraries stop at tweens and easing curves. Tensa adds a real physics layer directly in the core - gravity, springs, collisions, soft bodies - so motion can react to itself instead of just following a pre-baked curve.
+Tensa includes a physics layer - gravity, springs, collisions, soft bodies - built into the same timeline and tween system as everything else.
 
 **Core**
-- Tweens, timelines, and JSON-driven playback via `fromJSON()`
-- Labels, relative positioning, nesting, repeat/yoyo, and scrubbing
+- Tweens, timelines, and JSON-driven playback
+- Labels, nesting, stagger, and scrubbing
 
 **Physics & dynamics**
-- Gravity, collisions, explosions, fluid drag, magnetism
-- Orbits, pendulums, repulsion, soft body, swarming, tethers, springs, throw-with-velocity
+- Gravity, springs, collisions, and soft bodies
+- Orbits, pendulums, magnetism, and throw-with-velocity
 
 **Text**
-- Blur reveal, flip 3D, elastic snap, glitch, jigsaw, scatter, slot machine
-- Typewriter, scramble text, number counters, and more
+- Blur reveal, glitch, jigsaw, and scatter
+- Typewriter, scramble text, and number counters
 
 **Interaction & layout**
-- Draggable elements with inertia, bounds, and snapping (`Interactable`)
-- Scroll-triggered and scroll-scrubbed animation (`ScrollSync`)
-- FLIP-style layout animation and SVG path morphing (`LayoutMorph`, `PathMorph`, `PathTransition`)
+- Draggable elements with inertia and snapping
+- Scroll-driven animation and FLIP-style layout morphing
 
 ## Plugins
 
