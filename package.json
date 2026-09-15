@@ -1,6 +1,6 @@
 {
   "name": "tensajs",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Tensa is a JavaScript animation engine with a real physics layer built in. Animate DOM elements, CSS properties, and plain JavaScript objects with tweens, timelines, gravity, springs, collisions, soft bodies, and more. Add cinematic text effects, scroll-driven playback, and draggable interactions, all with zero dependencies.",
   "type": "module",
   "main": "./dist/tensajs.cjs.js",
