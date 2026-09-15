@@ -12,8 +12,8 @@ import { measure }          from './core/Inspector.js';
 import { createTracker }    from './core/Tracker.js';
 import { createResponsive } from './core/Responsive.js';
 import { resizeManager }    from './core/ResizeManager.js';
-import { resolveTargets }   from './core/TargetResolver.js';
-import { registerPropertyPlugin, applyWillChange, releaseWillChange, inferWillChange, getTransformState, buildTransformString } from './core/CSSPlugin.js';
+import { resolveTargets, resolveTarget, getOwnerWindow, getOwnerDocument, isElementLike, isNodeListLike, isShadowRootLike, isWindowLike } from './core/TargetResolver.js';
+import { registerPropertyPlugin, applyWillChange, releaseWillChange, inferWillChange, getTransformState, buildTransformString, applyProperty, prepareProperty, clearTransformCache } from './core/CSSPlugin.js';
 import { registerTweenHook } from './core/TweenManager.js';
 import { config }           from './core/Config.js';
 
@@ -330,7 +330,18 @@ const Tensa = {
   __internal: {
     getTransformState,
     buildTransformString,
-    resolveTargets
+    resolveTargets,
+    resolveTarget,
+    getOwnerWindow,
+    getOwnerDocument,
+    isElementLike,
+    isNodeListLike,
+    isShadowRootLike,
+    isWindowLike,
+    registerPropertyPlugin,
+    applyProperty,
+    prepareProperty,
+    clearTransformCache
   }
 };
 
@@ -356,8 +367,10 @@ export const defaults = tweenManager.setDefaults.bind(tweenManager);
 export const getAll = tweenManager.getAll.bind(tweenManager);
 export const loop = ticker;
 export const hook = registerTweenHook;
+export const use = registerPropertyPlugin;
 export const willChange = applyWillChange;
 export const clearWillChange = releaseWillChange;
+export const version = '1.0.0';
 
 export { Tween, Timeline, tweenManager, ticker, fromJSON, validateSchema, registerCallback, registerAction, registerTweenParser, registerPropertyPlugin };
 export { registerValidTweenType, registerValidAction, registerValidEasePattern } from './json/SchemaValidator.js';

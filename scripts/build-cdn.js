@@ -17,15 +17,16 @@ function rewriteCoreImportsPlugin() {
 
       let newCode = code;
       // Rewrite core imports
-      // import { resolveTargets } from '../../core/TargetResolver.js'; -> const { resolveTargets } = window.Tensa.__internal;
+      // import { resolveTargets } from '../../core/TargetResolver.js'; -> const { resolveTargets } = window.Tensa.default.__internal;
+
       newCode = newCode.replace(
         /import\s+\{([^}]+)\}\s+from\s+['"](?:\.\.\/)+core\/TargetResolver\.js['"];?/g,
-        'const { $1 } = window.Tensa.__internal;'
+        'const { $1 } = window.Tensa.default.__internal;'
       );
 
       newCode = newCode.replace(
         /import\s+\{([^}]+)\}\s+from\s+['"](?:\.\.\/)+core\/CSSPlugin\.js['"];?/g,
-        'const { $1 } = window.Tensa.__internal;'
+        'const { $1 } = window.Tensa.default.__internal;'
       );
 
       // import ticker from '../../core/Ticker.js'; -> const ticker = window.Tensa.loop;
