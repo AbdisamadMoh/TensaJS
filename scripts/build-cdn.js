@@ -18,8 +18,7 @@ function rewriteCoreImportsPlugin() {
       let newCode = code;
       // Rewrite core imports
       // import { resolveTargets } from '../../core/TargetResolver.js'; -> const { resolveTargets } = window.Tensa.default.__internal;
-
-      newCode = newCode.replace(
+       newCode = newCode.replace(
         /import\s+\{([^}]+)\}\s+from\s+['"](?:\.\.\/)+core\/TargetResolver\.js['"];?/g,
         'const { $1 } = window.Tensa.default.__internal;'
       );
@@ -58,9 +57,16 @@ async function buildCDN() {
   });
 
   const plugins = ['Dynamics', 'Interactable', 'LayoutMorph', 'PathMorph', 'PathTransition', 'ScrollSync', 'Text'];
+  // These plugins export a single class whose name collides with the plugin name itself,
+  // which makes Rollup nest it under window.Tensa.<Plugin>.default instead of the plugin
+  // path directly. Building from a tiny default-export shim avoids that nesting.
+  // (A virtual in-memory module was tried instead of a real file, but Vite's build.lib.entry
+  // validates the entry path before Rollup plugins can resolve a virtual id, so it isn't usable here.)
+  const SINGLE_CLASS_PLUGINS = new Set(['Interactable', 'LayoutMorph', 'PathTransition', 'ScrollSync']);
 
   console.log('Building Plugins...');
   for (const plugin of plugins) {
+    const isSingleClass = SINGLE_CLASS_PLUGINS.has(plugin);
     await build({
       configFile: false,
       plugins: [rewriteCoreImportsPlugin()],
@@ -68,13 +74,18 @@ async function buildCDN() {
         outDir: path.resolve(rootDir, `${OUT_DIR}/plugins`),
         emptyOutDir: false,
         lib: {
-          entry: path.resolve(rootDir, `src/plugins/${plugin}.js`),
+          entry: isSingleClass
+            ? path.resolve(rootDir, `src/plugins/cdn-entries/${plugin}.js`)
+            : path.resolve(rootDir, `src/plugins/${plugin}.js`),
           name: plugin === 'Dynamics' ? 'Tensa.Dynamics' : `Tensa.${plugin}`,
           formats: ['iife'],
           fileName: () => `${plugin.toLowerCase()}.js`
         },
         rollupOptions: {
-          output: { extend: true }
+          output: {
+            extend: true,
+            exports: isSingleClass ? 'default' : 'auto'
+          }
         },
         minify: 'esbuild'
       }
@@ -84,7 +95,7 @@ async function buildCDN() {
   console.log('Building Sub-plugins (Physics)...');
   const physicsFiles = fs.readdirSync(path.resolve(rootDir, 'src/plugins/physics'))
                          .filter(f => f.endsWith('.js') && f !== 'utils.js');
-
+  
   for (const file of physicsFiles) {
     const name = file.replace('.js', '');
     await build({
@@ -95,7 +106,7 @@ async function buildCDN() {
         emptyOutDir: false,
         lib: {
           entry: path.resolve(rootDir, `src/plugins/physics/${file}`),
-          name: 'Tensa.Dynamics',
+          name: 'Tensa.Dynamics', 
           formats: ['iife'],
           fileName: () => `${name.toLowerCase()}.js`
         },
@@ -106,7 +117,7 @@ async function buildCDN() {
       }
     });
   }
-
+  
   console.log('CDN build complete!');
 }
 

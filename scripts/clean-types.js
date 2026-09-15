@@ -7,18 +7,23 @@ const __dirname = path.dirname(__filename);
 
 function cleanTypes(dir) {
   const files = fs.readdirSync(dir);
-
+  
   for (const file of files) {
     const fullPath = path.join(dir, file);
-
+    
     if (fs.statSync(fullPath).isDirectory()) {
       cleanTypes(fullPath);
     } else if (fullPath.endsWith('.d.ts')) {
       let content = fs.readFileSync(fullPath, 'utf-8');
-
+      
       // Remove any property or method declaration that starts with `_` inside classes/interfaces.
+      // This regex matches lines like:
+      // "    _state: string;"
+      // "    _render(time: any): void;"
+      // "    readonly _startTime: number;"
+      // It matches spaces/tabs, optional 'readonly ', then `_`, followed by anything up to a newline.
       content = content.replace(/^[ \t]*(readonly )?_[\s\S]*?\n/gm, '');
-
+      
       fs.writeFileSync(fullPath, content, 'utf-8');
     }
   }
