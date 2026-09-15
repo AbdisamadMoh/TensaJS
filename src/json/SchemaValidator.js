@@ -89,10 +89,12 @@ export function validateSchema(doc) {
     }
   }
 
-  // Must have at least a timeline, tweens array, a valid single tween, or a setup block
-  if (!doc.timeline && !doc.tweens && !(doc.target && doc.props) && !doc.setup) {
-    errors.push('Document must have a "timeline", "tweens", or "setup" property, or be a valid single Tween config with "target" and "props".');
-  } else if (doc.target && doc.props && !doc.timeline && !doc.tweens) {
+  // Must have at least a timeline, tweens array, a valid single tween, or a setup block.
+  // A single tween is valid with either "props" or "keyframes" alongside "target".
+  const isSingleTween = doc.target && (doc.props || doc.keyframes);
+  if (!doc.timeline && !doc.tweens && !isSingleTween && !doc.setup) {
+    errors.push('Document must have a "timeline", "tweens", or "setup" property, or be a valid single Tween config with "target" and "props"/"keyframes".');
+  } else if (isSingleTween && !doc.timeline && !doc.tweens) {
     validateTween(doc, 'root', errors, customEaseNames);
   }
 

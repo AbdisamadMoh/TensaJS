@@ -309,7 +309,7 @@ export function fromJSON(doc, options = {}) {
       const tween = parseTween(tweenDef, inlineCallbacks, docDefaults);
       root.add(tween, tweenDef.position);
     });
-  } else if (resolved.target && resolved.props) {
+  } else if (resolved.target && (resolved.props || resolved.keyframes)) {
     resolved.paused = options.paused ?? resolved.paused;
     root = parseTween(resolved, inlineCallbacks, docDefaults);
   } else {
@@ -453,7 +453,8 @@ function parseKeyframeTween(def, sharedConfig) {
   });
 
   const totalDuration = sharedConfig.duration ?? 1;
-  const tl = new Timeline({ paused: true });
+  
+  const tl = new Timeline({ paused: sharedConfig.paused ?? false });
 
   let prevAt = 0;
   let prevProps = {};
@@ -470,6 +471,11 @@ function parseKeyframeTween(def, sharedConfig) {
         duration: segDuration,
         ease: kf.ease ?? sharedConfig.ease ?? 'cubic.out',
         paused: true,
+        // Each segment is driven exclusively by the parent timeline's scrub();
+        // without this, a paused "sequence" tween auto-renders its "from" state
+        // the instant it's constructed, which stomps over earlier segments still
+        // sitting on the DOM before playback even starts.
+        immediateRender: false,
       });
       tl.add(tween, prevAt * totalDuration);
     }
