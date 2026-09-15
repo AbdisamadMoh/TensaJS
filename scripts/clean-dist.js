@@ -1,4 +1,4 @@
-// Deletes dist/ before a build so stale artifacts (old entry names, old formats)
+
 import { rmSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';

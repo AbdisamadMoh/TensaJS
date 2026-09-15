@@ -18,7 +18,7 @@ const RESERVED_KEYS = new Set([
   'stagger', 'onStart', 'onUpdate', 'onComplete', 'onRepeat', 'onReverseComplete',
   'onStartParams', 'onUpdateParams', 'onCompleteParams',
   'id', 'data', 'callbackScope', 'immediateRender', 'overwrite', 'lazy',
-  'startAt', 'keyframes', 'reversed', 'willChange', 'scrollSync',
+  'startAt', 'keyframes', 'reversed', 'willChange', 'scrollSync', 'timeScale',
 ]);
 
 export class Tween extends Playable {
@@ -47,6 +47,7 @@ export class Tween extends Playable {
     this._paused    = config.paused ?? false;
     this._id        = config.id ?? null;
     this._overwrite = config.overwrite ?? 'auto';
+    if (config.timeScale !== undefined) this._timeScale = Math.max(0.001, config.timeScale);
     this._immediateRender = config.immediateRender ?? (type === 'animateFrom' || type === 'apply' || (type === 'sequence' && !!config.paused));
     this._stagger   = config.stagger ?? null;
     this._willChangeOpt = config.willChange ?? false;

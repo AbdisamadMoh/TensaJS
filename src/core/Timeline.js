@@ -358,7 +358,8 @@ export class Timeline extends Playable {
       let cycle = 0;
       let cycleProgress = rawProgress;
 
-      if (dur > 0 && animElapsed > dur && this._repeat !== 0) {
+      const pastFirstCycle = dur > 0 ? animElapsed > dur : (this._repeatDelay > 0 && animElapsed > 0);
+      if (pastFirstCycle && this._repeat !== 0) {
         const fullCycleDur = dur + this._repeatDelay;
         cycle = Math.floor(animElapsed / fullCycleDur);
         
@@ -369,7 +370,7 @@ export class Timeline extends Playable {
         }
 
         const localElapsed = animElapsed - cycle * fullCycleDur;
-        cycleProgress = Math.max(0, Math.min(localElapsed / dur, 1));
+        cycleProgress = dur === 0 ? 1 : Math.max(0, Math.min(localElapsed / dur, 1));
       }
 
       if (!this._started) {
