@@ -399,6 +399,7 @@ function parseTween(def, inlineCallbacks, docDefaults = {}) {
     repeat:      def.repeat ?? docDefaults.repeat ?? 0,
     repeatDelay: def.repeatDelay ?? docDefaults.repeatDelay ?? 0,
     yoyo:        def.yoyo ?? docDefaults.yoyo ?? false,
+    timeScale:   def.timeScale ?? docDefaults.timeScale ?? 1,
     paused:      def.paused ?? false,
     id:          def.id,
     stagger:     def.stagger,
@@ -453,8 +454,10 @@ function parseKeyframeTween(def, sharedConfig) {
   });
 
   const totalDuration = sharedConfig.duration ?? 1;
-  
-  const tl = new Timeline({ paused: sharedConfig.paused ?? false });
+  // Respect the requested paused/timeScale state like every other tween/timeline shape does
+  // (auto-plays by default). A parent Timeline.add() will force paused back to true anyway
+  // when used as a nested child, so this only matters at the root.
+  const tl = new Timeline({ paused: sharedConfig.paused ?? false, timeScale: sharedConfig.timeScale ?? 1 });
 
   let prevAt = 0;
   let prevProps = {};

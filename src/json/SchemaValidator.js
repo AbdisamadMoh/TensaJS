@@ -295,7 +295,7 @@ function validateTween(tween, path, errors, customEaseNames) {
     errors.push(`${path}.willChange must be a boolean or string.`);
   }
 
-  if (tween.type === 'sequence') {
+  if (tween.type === 'sequence' && tween.keyframes === undefined) {
     if (!tween.fromProps) {
       errors.push(`${path}: type "sequence" requires a "fromProps" object.`);
     }
