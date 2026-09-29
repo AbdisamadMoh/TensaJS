@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" role="img" aria-labelledby="title desc">
+  <title id="title">TensaJS Logo</title>
+  <desc id="desc">Abstract motion-inspired T mark with TensaJS wordmark.</desc>
+
+  <defs>
+    <linearGradient id="pinkGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff2a6d"/>
+      <stop offset="100%" stop-color="#d40f59"/>
+    </linearGradient>
+
+    <linearGradient id="darkGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111820"/>
+      <stop offset="100%" stop-color="#242c34"/>
+    </linearGradient>
+
+    <linearGradient id="deepPinkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c1125b"/>
+      <stop offset="100%" stop-color="#7f0b40"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Mark -->
+  <g transform="translate(80,95) scale(0.82)">
+    <path d="M85 55
+             C110 20 150 0 205 0
+             H505
+             C540 0 554 18 542 44
+             C520 87 475 118 420 138
+             C365 158 320 170 275 170
+             C230 170 205 180 205 220
+             V245
+             C205 205 190 176 164 158
+             C136 138 105 132 65 132
+             H25
+             C0 132 -5 116 6 96
+             C26 70 51 55 85 55Z"
+          fill="url(#pinkGrad)"/>
+
+    <path d="M205 132
+             C275 132 335 135 365 155
+             C395 175 400 198 390 225
+             C355 242 315 265 285 290
+             C250 320 225 345 195 380
+             V245
+             C195 185 170 150 130 132Z"
+          fill="url(#deepPinkGrad)"/>
+
+    <path d="M552 25
+             H695
+             C725 25 735 42 724 66
+             C705 110 669 145 627 166
+             C597 181 565 188 520 188
+             H470
+             C425 188 392 206 360 230
+             L425 173
+             C492 134 540 83 552 25Z"
+          fill="url(#darkGrad)"/>
+
+    <path d="M432 155
+             C390 198 336 224 300 250
+             C258 280 223 318 200 355
+             C171 401 161 446 181 500
+             C190 525 205 545 222 560
+             C204 507 211 466 234 430
+             C260 389 297 358 342 330
+             C381 305 429 282 470 240
+             C488 220 499 198 503 178
+             C478 183 455 174 432 155Z"
+          fill="url(#pinkGrad)"/>
+
+    <path d="M360 318
+             C390 294 421 278 445 259
+             V487
+             C445 545 427 587 394 615
+             C376 629 359 629 340 619
+             C294 596 266 561 260 516
+             C255 474 274 430 307 389
+             C324 368 342 344 360 318Z"
+          fill="url(#darkGrad)"/>
+
+    <path d="M263 436
+             C277 410 293 389 310 370
+             C295 430 301 487 330 534
+             C347 562 370 587 396 606
+             C362 627 319 616 286 591
+             C252 566 232 533 229 498
+             C227 476 238 453 263 436Z"
+          fill="url(#pinkGrad)"/>
+
+    <path d="M433 154
+             C389 198 336 224 301 250
+             C257 282 221 319 199 357"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="14"
+          stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark, spaced clearly to the right -->
+  <g transform="translate(650,455)">
+    <text x="0" y="0"
+          font-family="Inter, Avenir Next, Helvetica Neue, Arial, sans-serif"
+          font-size="170"
+          font-weight="700"
+          letter-spacing="-5">
+      <tspan fill="#111820">Tensa</tspan><tspan fill="#ff2a6d">JS</tspan>
+    </text>
+  </g>
+</svg>
