@@ -1,4 +1,10 @@
-# TensaJS
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="Logo/TensaJS-logo-with-text-white.svg">
+    <source media="(prefers-color-scheme: light)" srcset="Logo/TensaJS-logo-with-text.svg">
+    <img alt="TensaJS Logo" src="Logo/TensaJS-logo-with-text.svg" width="500">
+  </picture>
+</p>
 
 [![npm version](https://img.shields.io/npm/v/tensajs.svg)](https://www.npmjs.com/package/tensajs)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/tensajs)](https://bundlephobia.com/package/tensajs)
