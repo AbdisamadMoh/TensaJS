@@ -69,6 +69,10 @@ Tools for building and controlling motion:
 - SVG and path animation
 
 ### Text
+TensaJS natively supports powerful text splitting through *TextSlicer*, with native physics support for the split pieces. Text can be broken into characters, words, and lines, and each piece animates like any other element, with tweens, timelines, staggering, and physics all available.
+
+Links and formatting inside the text survive the split, and screen readers still read the original sentence. The original markup can be restored when the animation ends.
+
 Built-in text effects include:
 
 - Blur reveals
